@@ -102,6 +102,14 @@ describe('parse-git-config', function() {
         }
       });
     });
+
+    it('should prevent prototype pollution', function() {
+      const config = {};
+      const key = '__proto__ "polluted"';
+      config[key] = true;
+      parse.expandKeys(config);
+      assert.equal({}.polluted, undefined);
+    })
   });
 
   describe('resolve', function() {

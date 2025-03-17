@@ -136,12 +136,18 @@ parse.expandKeys = config => {
     let m = /(\S+) "(.*)"/.exec(key);
     if (!m) continue;
     let prop = m[1];
+    let subProp = m[2];
+    if (isForbiddenProp(prop) || isForbiddenProp(subProp)) continue;
     config[prop] = config[prop] || {};
-    config[prop][m[2]] = config[key];
+    config[prop][subProp] = config[key];
     delete config[key];
   }
   return config;
 };
+
+function isForbiddenProp(prop) {
+  return prop === '__proto__' || prop === 'constructor' || prop === 'prototype';
+}
 
 function parseIni(str, options) {
   let opts = Object.assign({}, options);
